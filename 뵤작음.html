@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세상에서 제일 작은 뵤 사전</title>
+    <style>
+        /* Font Definition */
+        @font-face {
+            font-family: 'OngleipParkDahyeon';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_ParkDaHyun.woff2') format('woff2');
+            font-weight: normal;
+            font-display: swap;
+        }
+
+        /* Apple Design Tokens & Custom Character Integration */
+        :root {
+            /* Colors */
+            --color-primary: #FFE866;
+            --color-primary-hover: #FFDF33;
+            --color-primary-soft: #FFF9C4;
+            --color-primary-text: #1d1d1f;
+
+            /* Canvas & Surfaces */
+            --color-canvas: #ffffff;
+            --color-canvas-parchment: #f5f5f7;
+            --color-surface-pearl: #fafafc;
+            --color-surface-black: #000000;
+            
+            /* Text & Borders */
+            --color-ink: #1d1d1f;
+            --color-body: #1d1d1f;
+            --color-body-on-dark: #ffffff;
+            --color-ink-muted-80: #333333;
+            --color-ink-muted-48: #7a7a7a;
+            --color-divider-soft: rgba(0, 0, 0, 0.06);
+            --color-hairline: #e0e0e0;
+
+            /* Spacing */
+            --space-xxs: 4px;
+            --space-xs: 8px;
+            --space-sm: 12px;
+            --space-md: 17px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-xxl: 48px;
+            --space-section: 80px;
+
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-lg: 18px;
+            --radius-pill: 9999px;
+
+            /* Font Family Set */
+            --font-custom: 'OngleipParkDahyeon', "SF Pro Display", -apple-system, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--color-canvas-parchment);
+            color: var(--color-body);
+            font-family: var(--font-custom);
+            font-size: 20px; /* 손글씨 폰트 가독성을 위해 기본 크기 조정 */
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Global Nav --- */
+        .global-nav {
+            background-color: var(--color-surface-black);
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .global-nav-logo {
+            color: var(--color-body-on-dark);
+            font-size: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo-img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .global-nav-tag {
+            color: var(--color-ink-muted-48);
+            font-size: 14px;
+        }
+
+        /* --- Sub Nav Frosted --- */
+        .sub-nav-frosted {
+            background-color: rgba(245, 245, 247, 0.85);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            height: 52px;
+            border-bottom: 1px solid var(--color-divider-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-xl);
+            position: sticky;
+            top: 44px;
+            z-index: 999;
+        }
+
+        .sub-nav-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-ink);
+        }
+
+        /* --- Hero Section --- */
+        .hero-tile {
+            background-color: var(--color-canvas);
+            padding: var(--space-section) 20px var(--space-xxl) 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .character-hero-img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: var(--space-md);
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-title {
+            font-size: 58px;
+            line-height: 1.1;
+            color: var(--color-ink);
+            margin-bottom: var(--space-xs);
+        }
+
+        .hero-lead {
+            font-size: 28px;
+            color: var(--color-ink-muted-48);
+            margin-bottom: var(--space-lg);
+        }
+
+        /* --- Alphabet Filter Pills --- */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .btn-pill {
+            background-color: var(--color-surface-pearl);
+            color: var(--color-ink);
+            border: 1px solid var(--color-hairline);
+            font-family: var(--font-custom);
+            font-size: 18px;
+            border-radius: var(--radius-pill);
+            padding: 6px 18px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-pill:hover {
+            background-color: var(--color-primary-soft);
+        }
+
+        .btn-pill.active {
+            background-color: var(--color-primary);
+            color: var(--color-primary-text);
+            border-color: var(--color-primary-hover);
+        }
+
+        .btn-pill:active {
+            transform: scale(0.95);
+        }
+
+        /* --- Dictionary Card Grid --- */
+        .grid-section {
+            padding: var(--space-xxl) var(--space-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dictionary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .store-utility-card {
+            background-color: var(--color-canvas);
+            border: 1px solid var(--color-hairline);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .store-utility-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(255, 232, 102, 0.35);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xxs);
+        }
+
+        .card-consonant-badge {
+            background-color: var(--color-primary-soft);
+            color: #7A6200;
+            font-size: 16px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-character-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: var(--color-ink);
+        }
+
+        .card-desc {
+            font-size: 19px;
+            color: var(--color-ink-muted-48);
+            line-height: 1.4;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--color-canvas-parchment);
+            border-top: 1px solid var(--color-hairline);
+            color: var(--color-ink-muted-48);
+            padding: 40px var(--space-xl);
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 833px) {
+            .hero-title { font-size: 42px; }
+            .hero-lead { font-size: 22px; }
+            .character-hero-img { width: 110px; height: 110px; }
+            .grid-section { padding: var(--space-lg) var(--space-sm); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Nav -->
+    <nav class="global-nav">
+        <a href="#" class="global-nav-logo">
+            <img src="byo.png" alt="뵤" class="nav-logo-img">
+            World's Smallest Byo
+        </a>
+        <span class="global-nav-tag">뵤과사전 Official Edition</span>
+    </nav>
+
+    <!-- Sub Nav Frosted -->
+    <div class="sub-nav-frosted">
+        <span class="sub-nav-title">뵤과사전</span>
+        <button class="btn-pill active" onclick="filterBy('전체')">전체 보기</button>
+    </div>
+
+    <!-- Hero Tile -->
+    <section class="hero-tile">
+        <img src="byo.png" alt="세상에서 제일 작은 뵤" class="character-hero-img">
+        <h1 class="hero-title">세상에서 제일 작은 뵤</h1>
+        <p class="hero-lead">쪼꼬미 뵤의 모든 순간을 담은 뵤과사전</p>
+
+        <!-- Alphabet Filter Navigation -->
+        <div class="filter-container" id="nav">
+            <button class="btn-pill active" onclick="filterBy('전체')">전체</button>
+        </div>
+    </section>
+
+    <!-- Dictionary Grid Section -->
+    <section class="grid-section">
+        <div class="dictionary-grid" id="dictionary"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Copyright © 2026 세상에서 제일 작은 뵤. All rights reserved. ✨</p>
+    </footer>
+
+    <script>
+        const dictData = [
+            // ㄱ
+            { key: 'ㄱ', word: '뵤만히', desc: '가만히 있을 때' },
+            { key: 'ㄱ', word: '뵤짓말', desc: '거짓말할 때' },
+            { key: 'ㄱ', word: '뵤벌뵤벌', desc: '겁먹었을 때' },
+            { key: 'ㄱ', word: '뵤민', desc: '고민 중일 때' },
+            { key: 'ㄱ', word: '뵤느님', desc: '고마울 때' },
+            { key: 'ㄱ', word: '뵤블리', desc: '귀여운 척할 때' },
+            { key: 'ㄱ', word: '뵤잉?', desc: '궁금할 때' },
+            { key: 'ㄱ', word: '아자뵤', desc: '기분 좋을 때' },
+
+            // ㄴ
+            { key: 'ㄴ', word: '뵤들짝', desc: '놀랐을 때' },
+            { key: 'ㄴ', word: '메롱뵤', desc: '놀릴 때' },
+            { key: 'ㄴ', word: '뵤체이탈', desc: '누워있을 때' },
+            { key: 'ㄴ', word: '울뵤', desc: '눈물 흘릴 때' },
+            { key: 'ㄴ', word: '뵤굼벵이', desc: '느릿느릿할 때' },
+
+            // ㄷ
+            { key: 'ㄷ', word: '뵤다닥', desc: '달려갈 때' },
+            { key: 'ㄷ', word: '뵤들뵤들', desc: '당황했을 때' },
+            { key: 'ㄷ', word: '뵤 (네) / 뵤오 (알겠어)', desc: '대답할 때' },
+            { key: 'ㄷ', word: '뵤렉스', desc: '돈 쓸 때' },
+            { key: 'ㄷ', word: '뵤근뵤근', desc: '두근거릴 때' },
+
+            // ㄹ
+            { key: 'ㄹ', word: '뵤전드', desc: '레전드 행동할 때' },
+            { key: 'ㄹ', word: '뵤드립', desc: '라임 맞출 때 (드립칠 때)' },
+
+            // ㅁ
+            { key: 'ㅁ', word: '뵤냠냠', desc: '먹을 때' },
+            { key: 'ㅁ', word: '멍뵤', desc: '멍때릴 때' },
+            { key: 'ㅁ', word: '뵤수다', desc: '말이 많을 때' },
+            { key: 'ㅁ', word: '뵤간지', desc: '멋있는 척할 때' },
+
+            // ㅂ
+            { key: 'ㅂ', word: '바뵤', desc: '바보 같을 때' },
+            { key: 'ㅂ', word: '뵤뿅', desc: '반했을 때' },
+            { key: 'ㅂ', word: '뵤끄뵤끄', desc: '부끄러울 때' },
+            { key: 'ㅂ', word: '뵤속뵤속', desc: '비밀 얘기할 때' },
+
+            // ㅅ
+            { key: 'ㅅ', word: '아자뵤', desc: '신났을 때' },
+            { key: 'ㅅ', word: '뵤송합니다', desc: '사과할 때' },
+            { key: 'ㅅ', word: '뵤인슈타인', desc: '생각 중일 때' },
+            { key: 'ㅅ', word: '뵤무룩', desc: '속상할 때' },
+            { key: 'ㅅ', word: '뵤뽀득', desc: '샤워할 때' },
+
+            // ㅇ
+            { key: 'ㅇ', word: '뵤하 / 뵤바', desc: '안녕(인사)' },
+            { key: 'ㅇ', word: '뵤통사고', desc: '억울할 때' },
+            { key: 'ㅇ', word: '뵤티풀', desc: '예쁠 때/멋질 때' },
+            { key: 'ㅇ', word: '뵤하하', desc: '웃을 때' },
+            { key: 'ㅇ', word: '노예뵤', desc: '일할 때/공부할 때' },
+
+            // ㅈ
+            { key: 'ㅈ', word: '콜콜뵤 / 뵤몽', desc: '잘 때' },
+            { key: 'ㅈ', word: '뵤부심', desc: '자랑할 때' },
+            { key: 'ㅈ', word: '뵤꾸러기', desc: '장난칠 때' },
+            { key: 'ㅈ', word: '뵤좌절', desc: '절망할 때' },
+
+            // ㅊ
+            { key: 'ㅊ', word: '뵤덜덜', desc: '추울 때' },
+            { key: 'ㅊ', word: '천재뵤', desc: '천재 같을 때' },
+            { key: 'ㅊ', word: '뵤쓱 (어깨 으쓱)', desc: '칭찬받았을 때' },
+            { key: 'ㅊ', word: '뵤바람', desc: '춤출 때' },
+
+            // ㅋ
+            { key: 'ㅋ', word: '뵤장엄', desc: '큰소리칠 때' },
+
+            // ㅌ
+            { key: 'ㅌ', word: '뵤퇴 (뵤 퇴근)', desc: '퇴근/하교할 때' },
+            { key: 'ㅌ', word: '뵤떼쟁이', desc: '투정 부릴 때' },
+
+            // ㅍ
+            { key: 'ㅍ', word: '뵤진맥진', desc: '피곤할 때' },
+            { key: 'ㅍ', word: '뵤기', desc: '포기할 때' },
+
+            // ㅎ
+            { key: 'ㅎ', word: '뵤르르 / 뵤당당', desc: '화났을 때' },
+            { key: 'ㅎ', word: '뵤절뵤절', desc: '한심할 때' },
+            { key: 'ㅎ', word: '뵤식', desc: '휴식할 때' }
+        ];
+
+        const consonants = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+        
+        // 버튼 생성
+        const navContainer = document.getElementById('nav');
+        consonants.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-pill';
+            btn.innerText = c;
+            btn.onclick = () => filterBy(c);
+            navContainer.appendChild(btn);
+        });
+
+        // 카드 출력
+        function renderCards(data) {
+            const container = document.getElementById('dictionary');
+            container.innerHTML = '';
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'store-utility-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-consonant-badge">${item.key}</div>
+                        <img src="byo.png" alt="뵤" class="card-character-img">
+                    </div>
+                    <div class="card-title">${item.word}</div>
+                    <div class="card-desc">${item.desc}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 필터링 기능
+        function filterBy(key) {
+            document.querySelectorAll('.btn-pill').forEach(btn => {
+                if (btn.innerText === key) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (key === '전체') {
+                renderCards(dictData);
+            } else {
+                const filtered = dictData.filter(item => item.key === key);
+                renderCards(filtered);
+            }
+        }
+
+        // 초기 화면
+        renderCards(dictData);
+    </script>
+</body>
+</html>
